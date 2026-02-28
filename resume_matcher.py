@@ -19,6 +19,14 @@ def clean_text(text):
 def extract_skills(text):
     return [skill for skill in SKILLS if skill in text]
 
+def generate_recommendation(score, missing_skills):
+    if score >= 70:
+        return "Candidate is a strong match for this position."
+    elif score >= 40:
+        return "Candidate meets basic requirements but can improve in: " + ", ".join(missing_skills)
+    else:
+        return "Candidate does not meet key requirements. Suggested to improve relevant technical skills."
+
 def calculate_match(resume_text, job_desc):
     resume_text = clean_text(resume_text)
     job_desc = clean_text(job_desc)
@@ -35,19 +43,22 @@ def calculate_match(resume_text, job_desc):
     matched = list(set(resume_skills) & set(jd_skills))
     missing = list(set(jd_skills) - set(resume_skills))
 
-    return score, matched, missing
+    recommendation = generate_recommendation(score, missing)
+
+    return score, matched, missing, recommendation
 
 def rank_resumes(resume_list, job_desc):
     results = []
 
     for idx, resume in enumerate(resume_list):
-        score, matched, missing = calculate_match(resume, job_desc)
+        score, matched, missing, recommendation = calculate_match(resume, job_desc)
 
         results.append({
             "resume_id": f"Resume {idx+1}",
             "score": score,
             "matched_skills": matched,
-            "missing_skills": missing
+            "missing_skills": missing,
+            "recommendation": recommendation
         })
 
     results = sorted(results, key=lambda x: x["score"], reverse=True)

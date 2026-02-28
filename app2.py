@@ -9,13 +9,14 @@ def home():
     matched = []
     missing = []
     ranking = []
+    recommendation = None
 
     if request.method == "POST":
         resumes = request.form.getlist("resume")
         jd = request.form["jd"]
 
         if len(resumes) == 1:
-            score, matched, missing = calculate_match(resumes[0], jd)
+            score, matched, missing, recommendation = calculate_match(resumes[0], jd)
         else:
             ranking = rank_resumes(resumes, jd)
 
@@ -23,7 +24,8 @@ def home():
                            score=score,
                            matched=matched,
                            missing=missing,
-                           ranking=ranking)
+                           ranking=ranking,
+                           recommendation=recommendation)
 
 @app.route("/match_score", methods=["POST"])
 def match_score_api():
@@ -31,12 +33,13 @@ def match_score_api():
     resume = data.get("resume")
     jd = data.get("job_description")
 
-    score, matched, missing = calculate_match(resume, jd)
+    score, matched, missing, recommendation = calculate_match(resume, jd)
 
     return jsonify({
         "match_score": score,
         "matched_skills": matched,
-        "missing_skills": missing
+        "missing_skills": missing,
+        "recommendation": recommendation
     })
 
 @app.route("/rank_resumes", methods=["POST"])
