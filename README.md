@@ -28,3 +28,5 @@ Helps HR teams filter resumes efficiently and identify candidate skill gaps inst
 - Resume PDF parsing
 - Multi-resume ranking
 - Web deployment
+## 🖼 Output Screenshot
+<img width="1396" height="669" alt="Screenshot 2026-02-28 203821" src="https://github.com/user-attachments/assets/848e7de0-d737-4fe0-8c39-1fc2a71f6f55" />
